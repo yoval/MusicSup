@@ -5,16 +5,20 @@ Created on Mon Apr 27 07:40:31 2020
 @author: Fuwenyue
 """
 
-import os
+import os,json
 from mutagen import File
 from mutagen.id3 import ID3
 
 BasePath = 'D:\\Music\\' # 音乐文件夹,需\\转义
-ImgLink = 'https://cos.bizha.top/Mp3Cover/' # 图片文件夹网络链接，结尾为'/'
+ImgLink = 'http://cos.bizha.top/Mp3Cover/' # 图片文件夹网络链接，结尾为'/'
 CosPath = 'mp3' # 音频对象储存文件夹
 Mp3Names = os.listdir(BasePath) # 文件夹包含文件 
 DataList = []
 Count=1
+def DeleY(st):
+    st = st.replace('"','')
+    st = st.replace('\'','')
+    return st
 for Mp3Name in Mp3Names:
     if 'mp3' not in Mp3Name:
         continue
@@ -26,7 +30,9 @@ for Mp3Name in Mp3Names:
     audio = ID3(Mp3FilePath)
     audio.update_to_v23()
     Title = Audio.tags["TIT2"].text[0] # 标题
+    Title = DeleY(Title)
     Singer = Audio.tags['TPE1'].text[0] # 歌手
+    Singer = DeleY(Singer)
     ImgUrl = ImgLink + CoverName # 图片网络链接
     try:
         PicData = Audio.tags['APIC:cover.jpg'].data 
@@ -39,11 +45,12 @@ for Mp3Name in Mp3Names:
     Data['author'] = Singer
     Data['path'] = CosPath+ '/' + Mp3Name
     Data['songid'] = Count
+    DataJson = json.dumps(Data,ensure_ascii=False)
     Count+=1
-    DataList.append(Data)
-    
-with open('musicList.json','w') as f :
-    f.write(str(DataList))
+    DataList.append(DataJson)
+    st = str(DataList).replace('\'','')
+with open('musicList.json','w',encoding='utf-8') as f :
+    f.write(st)
 
 
 
