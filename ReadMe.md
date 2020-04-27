@@ -11,6 +11,10 @@
 ### Lrc2Json.py
 将Lrc文件转换为Json文件。
 
+`http://www.bizha.top/1669707`
+### Mayun.py
+单文件运行
+`http://www.bizha.top/1672654`
 
 
 
